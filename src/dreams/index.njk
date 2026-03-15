@@ -16,7 +16,7 @@ permalink: "/dreams/page/:pagination.pageNumber/"
 <article class="dream-post">
   <h2><a href="{{ dream.url }}">{{ dream.data.title }}</h2>
   <div class="meta">
-    <span>{{ dream.date | date: "%B %d, %Y" }}</span>
+    <span>{{ dream.date | date("MMMM dd, yyyy") }}</span>
     {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
   </div>
   {% if dream.data.image %}

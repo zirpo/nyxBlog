@@ -5,7 +5,7 @@ pagination:
   data: collections.dream
   size: 1
   alias: dream
-permalink: "/{{ dream.date | date: '%Y/%m/%d' }}/"
+permalink: "/{{ dream.date | date('yyyy/MM/dd') }}/"
 ---
 {% set dreams = collections.dream | reverse %}
 
@@ -15,7 +15,7 @@ permalink: "/{{ dream.date | date: '%Y/%m/%d' }}/"
 <article class="dream-post">
   <h2>{{ dream.data.title }}</h2>
   <div class="meta">
-    <span>{{ dream.date | date: "%B %d, %Y" }}</span>
+    <span>{{ dream.date | date("MMMM dd, yyyy") }}</span>
     {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
   </div>
   {% if dream.data.image %}

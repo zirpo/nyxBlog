@@ -1,8 +1,14 @@
 const pluginRss = require("@11ty/eleventy-plugin-rss");
+const { DateTime } = require("luxon");
 
 module.exports = function(eleventyConfig) {
   // Add RSS plugin
   eleventyConfig.addPlugin(pluginRss);
+
+  // Add date filter for Nunjucks
+  eleventyConfig.addFilter("date", (dateObj, format) => {
+    return DateTime.fromJSDate(new Date(dateObj), { zone: "utc" }).toFormat(format);
+  });
 
   // Watch these additional file types for changes
   eleventyConfig.addWatchTarget("./src/assets/");
@@ -26,9 +32,6 @@ module.exports = function(eleventyConfig) {
       day: "numeric"
     });
   });
-
-  // Force Liquid template engine to avoid Nunjucks issues
-  eleventyConfig.setTemplateFormats(["html", "md", "liquid"]);
 
   return {
     dir: {
