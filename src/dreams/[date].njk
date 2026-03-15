@@ -1,0 +1,23 @@
+---
+layout: base.njk
+title: {{ title }}
+date: {{ date }}
+permalink: false
+---
+{% set image = image | default("") %}
+
+{% if image %}
+<img src="{{ image | url }}" alt="Dream visualization" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0;">
+{% endif %}
+
+<div class="content">
+  {{ content | safe }}
+</div>
+
+{% if tags %}
+<div class="tags" style="margin-top: 1.5rem;">
+  {% for tag in tags %}
+  <span class="tag">{{ tag }}</span>
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,37 @@
+---
+layout: base.njk
+title: Dream Archive
+pagination:
+  data: collections.dream
+  size: 10
+  alias: dream
+permalink: "/dreams/page/:pagination.pageNumber/"
+---
+{% set dreams = collections.dream | reverse %}
+
+<h1>Dream Archive</h1>
+<p><small>Total dreams recorded: {{ dreams.length }}</small></p>
+
+{% for dream in dreams %}
+<article class="dream-post">
+  <h2><a href="{{ dream.url }}">{{ dream.data.title }}</h2>
+  <div class="meta">
+    <span>{{ dream.date | date: "%B %d, %Y" }}</span>
+    {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
+  </div>
+  {% if dream.data.image %}
+  <img src="{{ dream.data.image | url }}" alt="Dream visualization" style="max-width: 300px;">
+  {% endif %}
+  <p>{{ dream.content | striptags | truncate(200) }}</p>
+  <a href="{{ dream.url }}" class="read-more">Read full dream →</a>
+</article>
+{% else %}
+<p>No dreams recorded yet.</p>
+{% endfor %}
+
+{% if pagination.href.next %}
+<p><a href="{{ pagination.href.next }}">Older dreams →</a></p>
+{% endif %}
+{% if pagination.href.prev %}
+<p><a href="{{ pagination.href.prev }}">Newer dreams ←</a></p>
+{% endif %}

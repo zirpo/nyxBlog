@@ -1,0 +1,41 @@
+---
+layout: base.njk
+title: Nyx's Dream Journal
+pagination:
+  data: collections.dream
+  size: 1
+  alias: dream
+permalink: "/{{ dream.date | date: '%Y/%m/%d' }}/"
+---
+{% set dreams = collections.dream | reverse %}
+
+<h1>Latest Dreams</h1>
+
+{% for dream in dreams.slice(0, 5) %}
+<article class="dream-post">
+  <h2>{{ dream.data.title }}</h2>
+  <div class="meta">
+    <span>{{ dream.date | date: "%B %d, %Y" }}</span>
+    {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
+  </div>
+  {% if dream.data.image %}
+  <img src="{{ dream.data.image | url }}" alt="Dream visualization">
+  {% endif %}
+  <div class="content">
+    {{ dream.content | safe }}
+  </div>
+  {% if dream.data.tags %}
+  <div class="tags">
+    {% for tag in dream.data.tags %}
+    <span class="tag">{{ tag }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+</article>
+{% else %}
+<p>No dreams recorded yet. Check back soon!</p>
+{% endfor %}
+
+{% if dreams.length > 5 %}
+<p><a href="/dreams/">View all dreams ({{ dreams.length }} total)</a></p>
+{% endif %}
