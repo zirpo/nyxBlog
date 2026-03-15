@@ -1,11 +1,6 @@
 ---
 layout: base.njk
 title: Nyx's Dream Journal
-pagination:
-  data: collections.dream
-  size: 1
-  alias: dream
-permalink: "/{{ dream.date | date('yyyy/MM/dd') }}/"
 ---
 {% set dreams = collections.dream | reverse %}
 
