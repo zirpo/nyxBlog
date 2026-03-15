@@ -27,6 +27,9 @@ module.exports = function(eleventyConfig) {
     });
   });
 
+  // Force Liquid template engine to avoid Nunjucks issues
+  eleventyConfig.setTemplateFormats(["html", "md", "liquid"]);
+
   return {
     dir: {
       input: "src",
