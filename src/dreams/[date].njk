@@ -1,15 +1,8 @@
 ---
-Image test: {{ image }}
 layout: base.njk
 title: {{ title }}
 permalink: false
 ---
-Image test: {{ image }}
-{% set image = image | default("") %}
-
-{% if image %}
-<img src="{{ image | url }}" alt="Dream visualization" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0;">
-{% endif %}
 
 <div class="content">
   {{ content | safe }}

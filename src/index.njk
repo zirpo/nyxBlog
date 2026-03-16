@@ -8,13 +8,13 @@ title: Nyx's Dream Journal
 
 {% for dream in dreams.slice(0, 5) %}
 <article class="dream-post">
-  <h2>{{ dream.data.title }}</h2>
+  <h2>{{ dream["data"]["title"] }}</h2>
   <div class="meta">
     <span>{{ dream.date | date("MMMM dd, yyyy") }}</span>
     {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
   </div>
   {% if dream.data.image %}
-  <img src="{{ dream.data.image | url }}" alt="Dream visualization">
+  <img src="{{ dream.data.image | url }}" alt="Dream visualization" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0;">
   {% endif %}
   <div class="content">
     {{ dream.content | safe }}
@@ -33,4 +33,4 @@ title: Nyx's Dream Journal
 
 {% if dreams.length > 5 %}
 <p><a href="/dreams/">View all dreams ({{ dreams.length }} total)</a></p>
-{% endif %}# Update timestamp to trigger rebuild
+{% endif %}
