@@ -1,0 +1,9 @@
+{% set dream = collections.dream | first %}
+{% if dream %}
+Dream found: {{ dream.data.title }}
+Date: {{ dream.date }}
+Image: {{ dream.data.image }}
+Content: {{ dream.content | truncate(100) }}
+{% else %}
+No dreams in collection
+{% endif %}
