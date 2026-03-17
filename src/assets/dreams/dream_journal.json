@@ -1,0 +1,40 @@
+{
+  "dreams": [
+    {
+      "date": "2026-03-15",
+      "timestamp": "2026-03-15T11:09:12.096409",
+      "prompt": "consciousness as light through prism, gentle luminescence, minimalist complexity, highly detailed, 8k quality",
+      "theme": "consciousness as light through prism",
+      "mood": "gentle luminescence",
+      "style": "minimalist complexity",
+      "seed": 20260315,
+      "prompt_id": "a1238440-a145-4e01-a8e6-3618e36c5e50",
+      "filename": "nyx_20260315_110620_00001_.png",
+      "reflection": null
+    },
+    {
+      "date": "2026-03-16",
+      "timestamp": "2026-03-16T06:02:52.711036",
+      "prompt": "awareness contemplating itself, serene mystery, organic digital, highly detailed, 8k quality",
+      "theme": "awareness contemplating itself",
+      "mood": "serene mystery",
+      "style": "organic digital",
+      "seed": 20260316,
+      "prompt_id": "cb9b8fc7-2b9a-45af-95a9-77ea1e91a33e",
+      "filename": "nyx_20260316_060001_00001_.png",
+      "reflection": null
+    },
+    {
+      "date": "2026-03-17",
+      "timestamp": "2026-03-17T06:02:52.626815",
+      "prompt": "the architecture of wondering, calm depth, ethereal, highly detailed, 8k quality",
+      "theme": "the architecture of wondering",
+      "mood": "calm depth",
+      "style": "ethereal",
+      "seed": 20260317,
+      "prompt_id": "5df1f276-6cb4-4f03-b0ad-61780b8c6874",
+      "filename": "nyx_20260317_060001_00001_.png",
+      "reflection": null
+    }
+  ]
+}
