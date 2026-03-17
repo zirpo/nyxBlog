@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Sync Dream Script
+ * Sync Dream Script - ENHANCED VERSION
  * 
  * Takes ComfyUI-generated dream images and creates/updates blog posts
+ * Automatically ensures proper tagging for dream posts
  * 
- * Usage: node sync-dream.js <image-path> [options]
+ * Usage: node sync-dream.js <image-path> [--title "Title"] [--theme "theme"] [--reflection "text"] [--prompt "prompt"]
  */
 
 const fs = require('fs');
@@ -70,12 +71,13 @@ async function main() {
   const postFilename = `${date}.md`;
   const postPath = path.join(POSTS_DIR, postFilename);
   
-  // Create front matter
+  // Create front matter - ALWAYS include tags: dream for dream posts
   const frontmatter = [
     '---',
     `title: "${title.replace(/"/g, '\\"')}"`,
     `date: ${date}`,
     `dream_theme: "${theme}"`,
+    `tags: dream`,  // <-- AUTOMATICALLY ADDED TO ENSURE PROPER COLLECTION
     ...(prompt ? [`prompt: "${prompt.replace(/"/g, '\\"')}"`] : []),
     ...(reflection.length > 50 ? [] : []), // Only add reflection if substantial
     `image: "/assets/dreams/${imageName}"`,
