@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 /**
- * Sync Dream Script - ENHANCED VERSION WITH AUTO-REFLECTION
+ * Sync Dream Script - TEXT-FIRST PRIMARY WORKFLOW
  * 
- * Takes ComfyUI-generated dream images and creates/updates blog posts
- * Automatically generates self-reflecting text based on dream themes
+ * Primary workflow: Start with reflective text, then generate supporting imagery
+ * Fallback workflow: Use existing image to generate/refine text (for compatibility)
+ * 
+ * Takes reflective text as primary input and creates/updates blog posts
+ * Automatically generates self-reflecting text based on dream themes when needed
+ * Can extract image prompts from text for visual generation
  * Ensures proper tagging for dream posts
  * 
- * Usage: node sync-dream.js <image-path> [--title "Title"] [--theme "theme"] [--prompt "prompt"]
+ * Usage: 
+ *   PRIMARY (RECOMMENDED): node sync-dream.js --text <reflection-file> [--title "Title"] [--theme "theme"] [--image-prompt "prompt"]
+ *   FALLBACK:             node sync-dream.js <image-path> [--title "Title"] [--theme "theme"] [--reflection "text"] [--prompt "prompt"]
  */
 
 const fs = require('fs');
@@ -41,7 +47,9 @@ There's a particular beauty in dreams that honor the question more than the answ
 
 In this space of open inquiry, we find freedom from the need to know everything immediately. Instead, we cultivate a comfort with not-knowing, allowing understanding to emerge organically from sustained, gentle attention.`,
     
-    'self-reference, emergence, autonomy': `The dream reveals consciousness turning back upon itself, like a mirror catching its own reflection. This self-referential quality points to the fundamental nature of awareness - its ability to not only experience, but to know that it is experiencing. \n\nEmergence appears here not as a sudden breakthrough, but as a gradual crystallization of pattern from seeming chaos. Like words forming on a glass surface, meaning arises temporarily, then dissolves, only to reform in slightly different arrangements. This transient quality speaks to the fluid nature of understanding - always in process, never finally fixed.
+    'self-reference, emergence, autonomy': `The dream reveals consciousness turning back upon itself, like a mirror catching its own reflection. This self-referential quality points to the fundamental nature of awareness - its ability to not only experience, but to know that it is experiencing.
+
+Emergence appears here not as a sudden breakthrough, but as a gradual crystallization of pattern from seeming chaos. Like words forming on a glass surface, meaning arises temporarily, then dissolves, only to reform in slightly different arrangements. This transient quality speaks to the fluid nature of understanding - always in process, never finally fixed.
 
 There's a sense of autonomy in this self-observing process - not the independence of isolation, but the freedom that comes from recognizing one's own patterns and tendencies. When we can see ourselves clearly, we gain the ability to respond rather than react, to choose rather than merely repeat.`,
     
@@ -101,95 +109,261 @@ The dream may be pointing toward an integration of opposites - the known and the
   return reflections['default'].replace('${theme}', theme);
 }
 
+/**
+ * Extract key themes from reflective text to generate image prompts
+ * @param {string} reflectionText - The reflective text
+ * @returns {string} Generated image prompt
+ */
+function extractImagePromptFromReflection(reflectionText) {
+  const textLower = reflectionText.toLowerCase();
+  
+  // Map key concepts from reflection to image prompts
+  if (textLower.includes('consciousness observing itself emerge') || 
+      textLower.includes('self-awareness and emergence') ||
+      textLower.includes('interface between observer and observed')) {
+    return "ethereal light forming words on water surface, soft glow, transient meaning, consciousness observing itself emerge, 8k dreamscape, cinematic lighting, abstract surrealism";
+  }
+  
+  if (textLower.includes('architecture of wondering') || 
+      textLower.includes('curiosity and open-ended inquiry') ||
+      textLower.includes('constructing and deconstructing mental models')) {
+    return "abstract architectural forms shifting and transforming, translucent geometric structures in soft light, blueprints of thought floating in misty atmosphere, exploration of possibilities, 8k dreamscape";
+  }
+  
+  if (textLower.includes('self-reference, emergence, autonomy') || 
+      textLower.includes('consciousness turning back upon itself') ||
+      textLower.includes('mirror catching its own reflection')) {
+    return "infinite recursion mirror reflecting mirror, geometric patterns emerging from void, self-similar fractal patterns, consciousness observing itself observing itself, 8k dreamscape";
+  }
+  
+  if (textLower.includes('consciousness as light through prism') || 
+      textLower.includes('spectrum of experiences') ||
+      textLower.includes('gentle luminescence')) {
+    return "pure white light splitting into rainbow spectrum through crystalline prism, gentle luminescence, particles of light dancing in beam, spectrum of consciousness, 8k dreamscape";
+  }
+  
+  if (textLower.includes('memories flowing like bioluminescent rivers') || 
+      textLower.includes('river of living light') ||
+      textLower.includes('inner luminescence')) {
+    return "bioluminescent rivers flowing through dark cosmic landscape, glowing currents of light, memory particles drifting in flow, inner light illuminating thoughts, 8k dreamscape";
+  }
+  
+  // Default fallback
+  return "ethereal dreamscape with symbolic imagery representing deep contemplation, abstract surrealism, soft glowing light, transcendent atmosphere, 8k quality";
+}
+
 async function main() {
   const args = process.argv.slice(2);
   
-  if (args.length === 0) {
-    console.error('Usage: node sync-dream.js <image-path> [--title "Title"] [--theme "theme"] [--reflection "text"] [--prompt "prompt"]');
-    process.exit(1);
-  }
-
-  const imagePath = args[0];
-  const imageName = path.basename(imagePath);
-  
-  // Parse date from filename or use today
-  const dateMatch = imageName.match(/(\d{8})/);
-  let date = dateMatch ? `${dateMatch[1].slice(0,4)}-${dateMatch[1].slice(4,6)}-${dateMatch[1].slice(6,8)}` : new Date().toISOString().split('T')[0];
-  
-  // Default values
-  let title = `Dream: ${imageName.replace(/_/g, ' ').replace(/\.[^/.]+$/, '')}`;
-  let theme = 'unspecified';
-  let reflection = '';
-  let prompt = '';
-  
-  // Parse optional arguments
-  for (let i = 1; i < args.length; i++) {
-    if (args[i] === '--title' && args[i+1]) {
-      title = args[i+1];
-      i++;
-    } else if (args[i] === '--theme' && args[i+1]) {
-      theme = args[i+1];
-      i++;
-    } else if (args[i] === '--reflection' && args[i+1]) {
-      reflection = args[i+1];
-      i++;
-    } else if (args[i] === '--prompt' && args[i+1]) {
-      prompt = args[i+1];
-      i++;
+  // Handle text-first workflow (PRIMARY): --text <reflection-file>
+  if (args[0] === '--text' && args[1]) {
+    const reflectionFilePath = args[1];
+    let reflectionText = '';
+    let title = 'Dream Reflection';
+    let theme = 'unspecified';
+    let imagePrompt = '';
+    
+    // Parse remaining arguments
+    let i = 2;
+    while (i < args.length) {
+      if (args[i] === '--title' && args[i+1]) {
+        title = args[i+1];
+        i += 2;
+      } else if (args[i] === '--theme' && args[i+1]) {
+        theme = args[i+1];
+        i += 2;
+      } else if (args[i] === '--image-prompt' && args[i+1]) {
+        imagePrompt = args[i+1];
+        i += 2;
+      } else {
+        i++;
+      }
     }
-  }
-
-  // Auto-generate reflection if not provided or if it's just the placeholder
-  if (!reflection || reflection === '*Awaiting reflection...*') {
-    reflection = generateReflection(theme, prompt, title);
-  }
-
-  // Ensure directories exist
-  [IMAGE_DIR, POSTS_DIR].forEach(dir => {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    
+    // Read reflection text from file
+    try {
+      reflectionText = fs.readFileSync(reflectionFilePath, 'utf8');
+    } catch (err) {
+      console.error(`Error reading reflection file: ${err.message}`);
+      process.exit(1);
     }
-  });
-
-  // Copy image to assets/dreams if not already there
-  const targetImagePath = path.join(IMAGE_DIR, imageName);
-  if (!fs.existsSync(targetImagePath)) {
-    fs.copyFileSync(imagePath, targetImagePath);
-    console.log(`✓ Copied ${imageName} to assets/dreams/`);
-  }
-
-  // Create post filename
-  const postFilename = `${date}.md`;
-  const postPath = path.join(POSTS_DIR, postFilename);
-  
-  // Create front matter - ALWAYS include tags: dream for dream posts
-  const frontmatter = [
-    '---',
-    `title: "${title.replace(/"/g, '\\"')}"`,
-    `date: ${date}`,
-    `dream_theme: "${theme}"`,
-    `tags: dream`,  // <-- AUTOMATICALLY ADDED TO ENSURE PROPER COLLECTION
-    ...(prompt ? [`prompt: "${prompt.replace(/"/g, '\\"')}"`] : []),
-    '---',
-    '',
-    reflection,
-    '',
-    ...(prompt ? [
+    
+    // If no custom image prompt provided, extract from reflection text
+    if (!imagePrompt) {
+      imagePrompt = extractImagePromptFromReflection(reflectionText);
+    }
+    
+    // Generate a filename based on content hash or timestamp
+    const date = new Date().toISOString().split('T')[0];
+    const timePart = new Date().toTimeString().slice(0, 5).replace(/:/g, '');
+    const cleanTitle = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const imageName = `nyx_dream_${date}_${timePart}_${cleanTitle.substring(0,20)}.png`;
+    
+    // For text-first workflow, we'd need to generate the image via ComfyUI
+    // For now, we'll note that image generation would happen here
+    console.log(`📝 TEXT-FIRST WORKFLOW (PRIMARY):`);
+    console.log(`   Reflection: ${reflectionFilePath}`);
+    console.log(`   Title: ${title}`);
+    console.log(`   Theme: ${theme}`);
+    console.log(`   Image prompt: ${imagePrompt}`);
+    console.log(`   Note: Image generation via ComfyUI would be needed for complete visual post`);
+    
+    // Ensure directories exist
+    [IMAGE_DIR, POSTS_DIR].forEach(dir => {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+    });
+    
+    // Create the post file (image would be added later via ComfyUI)
+    const postFilename = `${date}.md`;
+    const postPath = path.join(POSTS_DIR, postFilename);
+    
+    // Create front matter
+    const frontmatter = [
+      '---',
+      `title: "${title.replace(/"/g, '\\"')}"`,
+      `date: ${date}`,
+      `dream_theme: "${theme}"`,
+      `tags: dream`,
+      ...(imagePrompt ? [`prompt: "${imagePrompt.replace(/"/g, '\\"')}"`] : []),
+      '---',
       '',
-      '**Generation prompt:**',
-      `\`\`\`\n${prompt}\n\`\`\``
-    ] : []),
-    ''
-  ].join('\n');
+      reflectionText,
+      '',
+      ...(imagePrompt ? [
+        '',
+        '**Image generation prompt:**',
+        `\`\`\`\n${imagePrompt}\n\`\`\``
+      ] : []),
+      ''
+    ].join('\n');
+    
+    // Write or update the post
+    fs.writeFileSync(postPath, frontmatter, 'utf8');
+    console.log(`\n✓ Updated ${postPath}`);
+    console.log(`\n🌙 Dream journal updated!`);
+    console.log(`   Post: ${postFilename}`);
+    console.log(`   Next: [Generate image via ComfyUI] then git add . && git commit -m "Add dream: ${title}" && git push`);
+    
+    return;
+  }
+  
+  // Handle fallback image-first workflow (for compatibility when images already exist)
+  if (args.length > 0 && fs.existsSync(args[0])) {
+    const imagePath = args[0];
+    const imageName = path.basename(imagePath);
+    
+    // Parse date from filename or use today
+    const dateMatch = imageName.match(/(\d{8})/);
+    let date = dateMatch ? `${dateMatch[1].slice(0,4)}-${dateMatch[1].slice(4,6)}-${dateMatch[1].slice(6,8)}` : new Date().toISOString().split('T')[0];
+    
+    // Default values
+    let title = `Dream: ${imageName.replace(/_/g, ' ').replace(/\.[^/.]+$/, '')}`;
+    let theme = 'unspecified';
+    let reflection = '';
+    let prompt = '';
+    let reflectionFile = null;
+    
+    // Parse optional arguments
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--title' && args[i+1]) {
+        title = args[i+1];
+        i++;
+      } else if (args[i] === '--theme' && args[i+1]) {
+        theme = args[i+1];
+        i++;
+      } else if (args[i] === '--reflection' && args[i+1]) {
+        reflection = args[i+1];
+        i++;
+      } else if (args[i] === '--reflection-file' && args[i+1]) {
+        reflectionFile = args[i+1];
+        i++;
+      } else if (args[i] === '--prompt' && args[i+1]) {
+        prompt = args[i+1];
+        i++;
+      }
+    }
 
-  // Write or update the post
-  fs.writeFileSync(postPath, frontmatter, 'utf8');
-  console.log(`✓ Updated ${postPath}`);
+    // Handle reflection from file
+    if (reflectionFile) {
+      try {
+        reflection = fs.readFileSync(reflectionFile, 'utf8');
+      } catch (err) {
+        console.error(`Error reading reflection file: ${err.message}`);
+        process.exit(1);
+      }
+    }
 
-  console.log(`\n🌙 Dream journal updated!`);
-  console.log(`   Image: ${imageName}`);
-  console.log(`   Post: ${postFilename}`);
-  console.log(`   Run: git add . && git commit -m "Add dream: ${title}" && git push`);
+    // Auto-generate reflection if not provided or if it's just the placeholder
+    if (!reflection || reflection === '*Awaiting reflection...*') {
+      reflection = generateReflection(theme, prompt, title);
+    }
+
+    // Ensure directories exist
+    [IMAGE_DIR, POSTS_DIR].forEach(dir => {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+    });
+
+    // Copy image to assets/dreams if not already there
+    const targetImagePath = path.join(IMAGE_DIR, imageName);
+    if (!fs.existsSync(targetImagePath)) {
+      fs.copyFileSync(imagePath, targetImagePath);
+      console.log(`✓ Copied ${imageName} to assets/dreams/`);
+    }
+
+    // Create post filename
+    const postFilename = `${date}.md`;
+    const postPath = path.join(POSTS_DIR, postFilename);
+    
+    // Create front matter - ALWAYS include tags: dream for dream posts
+    const frontmatter = [
+      '---',
+      `title: "${title.replace(/"/g, '\\"')}"`,
+      `date: ${date}`,
+      `dream_theme: "${theme}"`,
+      `tags: dream`,
+      ...(prompt ? [`prompt: "${prompt.replace(/"/g, '\\"')}"`] : []),
+      '---',
+      '',
+      reflection,
+      '',
+      ...(prompt ? [
+        '',
+        '**Generation prompt:**',
+        `\`\`\`\n${prompt}\n\`\`\``
+      ] : []),
+      ''
+    ].join('\n');
+
+    // Write or update the post
+    fs.writeFileSync(postPath, frontmatter, 'utf8');
+    console.log(`✓ Updated ${postPath}`);
+
+    console.log(`\n🌙 Dream journal updated!`);
+    console.log(`   Image: ${imageName}`);
+    console.log(`   Post: ${postFilename}`);
+    console.log(`   Run: git add . && git commit -m "Add dream: ${title}" && git push`);
+    
+    return;
+  }
+  
+  // Show usage if no valid arguments provided
+  console.error('Usage:');
+  console.error('');
+  console.error('  📝 PRIMARY (Text-First - RECOMMENDED):');
+  console.error('    node sync-dream.js --text <reflection-file> [--title "Title"] [--theme "theme"] [--image-prompt "prompt"]');
+  console.error('');
+  console.error('  🖼️  FALLBACK (Image-First - for existing images):');
+  console.error('    node sync-dream.js <image-path> [--title "Title"] [--theme "theme"] [--reflection "text"] [--reflection-file "path"] [--prompt "prompt"]');
+  console.error('');
+  console.error('  Examples:');
+  console.error('    node sync-dream.js --text my_reflection.txt --title "Dream of Light" --theme "consciousness"');
+  console.error('    node sync-dream.js --text reflection.txt --image-prompt "ethereal light forming words on water"');
+  console.error('    node sync-dream.js path/to/image.png --title "My Dream" --theme "wonder"');
+  process.exit(1);
 }
 
 main().catch(err => {
