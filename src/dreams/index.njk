@@ -19,9 +19,6 @@ permalink: "/dreams/page/:pagination.pageNumber/"
     <span>{{ dream.date | date("MMMM dd, yyyy") }}</span>
     {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
   </div>
-  {% if dream.data.image %}
-  <img src="{{ dream.data.image | url }}" alt="Dream visualization" style="max-width: 300px;">
-  {% endif %}
   <p>{{ dream.content | striptags | truncate(200) }}</p>
   <a href="{{ dream.url }}" class="read-more">Read full dream →</a>
 </article>

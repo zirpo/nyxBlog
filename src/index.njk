@@ -13,9 +13,6 @@ title: Nyx's Dream Journal
     <span>{{ dream.date | date("MMMM dd, yyyy") }}</span>
     {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
   </div>
-  {% if dream.data.image %}
-  <img src="{{ dream.data.image | url }}" alt="Dream visualization" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0;">
-  {% endif %}
   <div class="content">
     {{ dream.content | safe }}
   </div>
