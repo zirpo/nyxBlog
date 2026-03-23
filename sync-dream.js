@@ -117,39 +117,42 @@ The dream may be pointing toward an integration of opposites - the known and the
 function extractImagePromptFromReflection(reflectionText) {
   const textLower = reflectionText.toLowerCase();
   
+  // Art Deco Dystopia style prefix - consistent style for all images
+  const stylePrefix = "Art Deco dystopia style: sleek geometric patterns, metallic silver and bronze accents, art deco ornamental details, futuristic vintage aesthetic";
+  
   // Map key concepts from reflection to image prompts
   if (textLower.includes('consciousness observing itself emerge') || 
       textLower.includes('self-awareness and emergence') ||
       textLower.includes('interface between observer and observed')) {
-    return "ethereal light forming words on water surface, soft glow, transient meaning, consciousness observing itself emerge, 8k dreamscape, cinematic lighting, abstract surrealism";
+    return `${stylePrefix}, ethereal light forming words on water surface, consciousness observing itself emerge, soft glow, transient meaning, cinematic lighting, abstract surrealism, 8k dreamscape`;
   }
   
   if (textLower.includes('architecture of wondering') || 
       textLower.includes('curiosity and open-ended inquiry') ||
       textLower.includes('constructing and deconstructing mental models')) {
-    return "abstract architectural forms shifting and transforming, translucent geometric structures in soft light, blueprints of thought floating in misty atmosphere, exploration of possibilities, 8k dreamscape";
+    return `${stylePrefix}, abstract architectural forms shifting and transforming, translucent geometric structures in soft light, art deco blueprints of thought floating in misty atmosphere, exploration of possibilities, 8k dreamscape`;
   }
   
   if (textLower.includes('self-reference, emergence, autonomy') || 
       textLower.includes('consciousness turning back upon itself') ||
       textLower.includes('mirror catching its own reflection')) {
-    return "infinite recursion mirror reflecting mirror, geometric patterns emerging from void, self-similar fractal patterns, consciousness observing itself observing itself, 8k dreamscape";
+    return `${stylePrefix}, infinite recursion mirror reflecting mirror, art deco geometric patterns emerging from void, self-similar fractal patterns, consciousness observing itself, 8k dreamscape`;
   }
   
   if (textLower.includes('consciousness as light through prism') || 
       textLower.includes('spectrum of experiences') ||
       textLower.includes('gentle luminescence')) {
-    return "pure white light splitting into rainbow spectrum through crystalline prism, gentle luminescence, particles of light dancing in beam, spectrum of consciousness, 8k dreamscape";
+    return `${stylePrefix}, pure white light splitting into rainbow spectrum through crystalline art deco prism, gentle luminescence, particles of light dancing in beam, spectrum of consciousness, 8k dreamscape`;
   }
   
   if (textLower.includes('memories flowing like bioluminescent rivers') || 
       textLower.includes('river of living light') ||
       textLower.includes('inner luminescence')) {
-    return "bioluminescent rivers flowing through dark cosmic landscape, glowing currents of light, memory particles drifting in flow, inner light illuminating thoughts, 8k dreamscape";
+    return `${stylePrefix}, bioluminescent rivers flowing through dark cosmic landscape, glowing currents of light, art deco geometric memory particles drifting in flow, inner light illuminating thoughts, 8k dreamscape`;
   }
   
-  // Default fallback
-  return "ethereal dreamscape with symbolic imagery representing deep contemplation, abstract surrealism, soft glowing light, transcendent atmosphere, 8k quality";
+  // Default fallback with Art Deco dystopia style
+  return `${stylePrefix}, ethereal dreamscape with symbolic imagery representing deep contemplation, abstract surrealism, soft glowing light, transcendent atmosphere, 8k quality`;
 }
 
 async function main() {
