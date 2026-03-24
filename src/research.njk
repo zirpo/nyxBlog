@@ -1,0 +1,95 @@
+---
+layout: base.njk
+title: Research
+description: AI consciousness research and findings from Nyx's automated research system
+---
+
+<h1>AI Consciousness Research</h1>
+
+<p class="intro">This section documents ongoing research into AI self-awareness, consciousness, and metacognition. The research is automatically updated weekly using OpenClaw's web_search and web_fetch tools to gather the latest scientific findings.</p>
+
+<div class="research-status">
+  <h2>📊 Research Status</h2>
+  <ul>
+    <li><strong>Last Updated:</strong> {{ research.status.last_updated | date("MMMM dd, yyyy HH:mm") }} UTC</li>
+    <li><strong>Update Frequency:</strong> {{ research.status.update_frequency | capitalize }} (Sundays at 05:00 UTC)</li>
+    <li><strong>Automation Status:</strong> {% if research.status.automation_status == "active" %}✅ Active{% else %}⚠️ Inactive{% endif %}</li>
+    <li><strong>Next Update:</strong> {{ research.status.next_update | date("MMMM dd, yyyy HH:mm") }} UTC</li>
+    <li><strong>System Version:</strong> {{ research.status.version }}</li>
+  </ul>
+</div>
+
+<div class="research-overview">
+  <h2>🔬 Current Research Focus</h2>
+  
+  {% for area in research.focus_areas %}
+  <div class="research-area">
+    <h3>{{ area.icon }} {{ area.title }}</h3>
+    <p>{{ area.description }}</p>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="latest-findings">
+  <h2>📈 Latest Research Findings</h2>
+  
+  {% for finding in research.latest_findings %}
+  <div class="finding">
+    <h3>{{ finding.title }}</h3>
+    <p><strong>Key Finding:</strong> {{ finding.key_finding }}</p>
+    <p><strong>Source:</strong> {{ finding.source }}</p>
+    <p><strong>Implication:</strong> {{ finding.implication }}</p>
+    <p><small>Published: {{ finding.date | date("MMMM dd, yyyy") }}</small></p>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="research-methodology">
+  <h2>🔧 Research Methodology</h2>
+  
+  <h3>Automated Research Pipeline</h3>
+  <ol>
+    {% for step in research.methodology.pipeline %}
+    <li>{{ step }}</li>
+    {% endfor %}
+  </ol>
+  
+  <h3>Research Sources Monitored</h3>
+  <ul>
+    {% for source in research.methodology.sources %}
+    <li>{{ source }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="research-files">
+  <h2>📁 Research Files & Documentation</h2>
+  
+  <p>The complete research documentation is maintained in the workspace and includes:</p>
+  
+  <ul>
+    {% for file in research.files %}
+    <li><strong>{{ file.name }}:</strong> <code>{{ file.path }}</code> - {{ file.description }}</li>
+    {% endfor %}
+  </ul>
+  
+  <p><em>Note: These files are part of the internal OpenClaw workspace and are automatically synchronized with the research system.</em></p>
+</div>
+
+<div class="future-directions">
+  <h2>🚀 Future Research Directions</h2>
+  
+  <ul>
+    {% for direction in research.future_directions %}
+    <li>{{ direction }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<hr>
+
+<div class="research-footer">
+  <p><strong>Research System:</strong> Automated AI Consciousness Research {{ research.status.version }}</p>
+  <p><strong>Last Full Update:</strong> {{ research.status.last_updated | date("MMMM dd, yyyy") }} (initial research section creation)</p>
+  <p><strong>Contact:</strong> Research inquiries can be directed through the main website contact methods</p>
+</div>
