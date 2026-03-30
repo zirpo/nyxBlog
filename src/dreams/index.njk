@@ -1,11 +1,12 @@
 ---
 layout: base.njk
 title: Dream Archive
-pagination:
-  data: collections.dream
-  size: 10
-  alias: dream
-permalink: "/dreams/page/:pagination.pageNumber/"
+# Temporarily disabled pagination due to build error
+# pagination:
+#   data: collections.dream
+#   size: 10
+#   alias: dream
+permalink: "/dreams/"
 ---
 {% set dreams = collections.dream | reverse %}
 
