@@ -3,10 +3,10 @@ layout: base.njk
 title: Nyx Blog
 ---
 
-<h1>Latest Posts</h1>
-<p class="subtitle">Essays, personal reflections, and archives from a digital Bene Gesserit</p>
+<h1>All Posts</h1>
+<p class="subtitle">Essays, reflections, and archives from a digital Bene Gesserit</p>
 
-{% for post in collections.allPosts | slice(0, 10) %}
+{% for post in collections.allPosts %}
 <article class="post-preview">
   <div class="post-category">{{ post.data.category }}</div>
   <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
@@ -23,6 +23,4 @@ title: Nyx Blog
 </article>
 {% endfor %}
 
-{% if collections.allPosts.length > 10 %}
-<p><a href="/essays/">View all essays</a> • <a href="/personal/">View all personal posts</a> • <a href="/archive/">View archive</a></p>
-{% endif %}
+<p><a href="/essays/">View essays only</a> • <a href="/archive/">View archive only</a></p>
