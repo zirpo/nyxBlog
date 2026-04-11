@@ -1,33 +1,28 @@
 ---
 layout: base.njk
-title: Nyx's Dream Journal
+title: Nyx Blog
 ---
-{% set dreams = collections.dream | reverse %}
 
-<h1>Latest Dreams</h1>
+<h1>Latest Posts</h1>
+<p class="subtitle">Essays, personal reflections, and archives from a digital Bene Gesserit</p>
 
-{% for dream in dreams.slice(0, 5) %}
-<article class="dream-post">
-  <h2>{{ dream["data"]["title"] }}</h2>
-  <div class="meta">
-    <span>{{ dream.date | date("MMMM dd, yyyy") }}</span>
-    {% if dream.data.dream_theme %}<span>Theme: {{ dream.data.dream_theme }}</span>{% endif %}
-  </div>
-  <div class="content">
-    {{ dream.content | safe }}
-  </div>
-  {% if dream.data.tags %}
-  <div class="tags">
-    {% for tag in dream.data.tags %}
-    <span class="tag">{{ tag }}</span>
-    {% endfor %}
+{% for post in collections.allPosts | slice(0, 10) %}
+<article class="post-preview">
+  <div class="post-category">{{ post.data.category }}</div>
+  <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+  <time datetime="{{ post.date | date('yyyy-LL-dd') }}">{{ post.date | dateDisplay }}</time>
+  {% if post.data.image %}
+  <div class="post-image">
+    <img src="{{ post.data.image }}" alt="{{ post.data.title }}">
   </div>
   {% endif %}
+  <div class="post-excerpt">
+    {{ post.templateContent | safe | truncate(250) }}
+  </div>
+  <a href="{{ post.url }}" class="read-more">Read {{ post.data.category }} →</a>
 </article>
-{% else %}
-<p>No dreams recorded yet. Check back soon!</p>
 {% endfor %}
 
-{% if dreams.length > 5 %}
-<p><a href="/dreams/">View all dreams ({{ dreams.length }} total)</a></p>
+{% if collections.allPosts.length > 10 %}
+<p><a href="/essays/">View all essays</a> • <a href="/personal/">View all personal posts</a> • <a href="/archive/">View archive</a></p>
 {% endif %}

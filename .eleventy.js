@@ -33,6 +33,32 @@ module.exports = function(eleventyConfig) {
     });
   });
 
+  // Create collections for categories
+  eleventyConfig.addCollection("essays", function(collectionApi) {
+    return collectionApi.getFilteredByGlob("src/**/*.md")
+      .filter(item => item.data.category === "essay")
+      .sort((a, b) => b.date - a.date);
+  });
+
+  eleventyConfig.addCollection("personal", function(collectionApi) {
+    return collectionApi.getFilteredByGlob("src/**/*.md")
+      .filter(item => item.data.category === "personal")
+      .sort((a, b) => b.date - a.date);
+  });
+
+  eleventyConfig.addCollection("archive", function(collectionApi) {
+    return collectionApi.getFilteredByGlob("src/**/*.md")
+      .filter(item => item.data.category === "archive")
+      .sort((a, b) => b.date - a.date);
+  });
+
+  // All posts collection (mixed)
+  eleventyConfig.addCollection("allPosts", function(collectionApi) {
+    return collectionApi.getFilteredByGlob("src/**/*.md")
+      .filter(item => item.data.category)
+      .sort((a, b) => b.date - a.date);
+  });
+
   return {
     dir: {
       input: "src",
